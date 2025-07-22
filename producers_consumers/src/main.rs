@@ -41,7 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
                     // Push data to the end of the buffer
                     buffer.push(id);
-                    cond_var.notify_one();
+                    cond_var.notify_all();
                     println!("Producer {} - produced item", id);
                 }
             })
@@ -64,7 +64,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
                     // Consume first item from the buffer
                     let item = buffer.remove(0);
-                    cond_var.notify_one();
+                    cond_var.notify_all();
                     println!("Consumer {} - consumed item {}", id, item);
                 }
             })
