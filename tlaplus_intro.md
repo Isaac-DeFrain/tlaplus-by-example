@@ -64,5 +64,7 @@ TLA+ is a formal specification language used for designing, modeling, and verify
   - take item from the queue
   - wait if empty
 - a waiting/blocked thread is notified when an item is added or removed
+  - producers notify waiting consumers
+  - consumers notify waiting producers
 
 How can we prove that our program is deadlock free?
