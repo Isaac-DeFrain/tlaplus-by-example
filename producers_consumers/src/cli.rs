@@ -1,18 +1,18 @@
-//! CLI for Producers and Consumers Example
+//! CLI for producers/consumers
 
 use clap::Parser;
 
 #[derive(Parser)]
-struct Cli {
+pub struct Cli {
     /// Number of producers
     #[arg(long, default_value = "1")]
-    producers: usize,
+    pub producers: usize,
 
     /// Number of consumers
     #[arg(long, default_value = "1")]
-    consumers: usize,
+    pub consumers: usize,
 
     /// Buffer size
     #[arg(long, default_value = "1")]
-    buffer_size: usize,
+    pub buffer_size: usize,
 }
