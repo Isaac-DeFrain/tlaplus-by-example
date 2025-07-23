@@ -9,6 +9,12 @@ use std::{
 
 mod cli;
 
+struct Queue {
+    queue: Mutex<Vec<usize>>,
+    consumer_cond_var: Condvar,
+    producer_cond_var: Condvar,
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     // Parse command line arguments
     let cli = cli::Cli::try_parse()?;
@@ -17,8 +23,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     let buffer_size = cli.buffer_size;
 
     // Initialize empty buffer
-    let queue = <Vec<usize>>::with_capacity(buffer_size);
-    let buffer = Arc::new((Mutex::new(queue), Condvar::new()));
+    let queue = Queue {
+        queue: Mutex::new(Vec::with_capacity(buffer_size)),
+        consumer_cond_var: Condvar::new(),
+        producer_cond_var: Condvar::new(),
+    };
+    let buffer = Arc::new(queue);
 
     println!(
         "Buffer size = {}, # Producers = {}, # Consumers: {}",
@@ -30,18 +40,22 @@ fn main() -> Result<(), Box<dyn Error>> {
             let buffer = Arc::clone(&buffer);
             thread::spawn(move || {
                 loop {
-                    let (lock, cond_var) = &*buffer;
-                    let mut buffer = lock.lock().unwrap();
+                    let Queue {
+                        queue,
+                        consumer_cond_var,
+                        producer_cond_var,
+                    } = &*buffer;
+                    let mut buffer = queue.lock().unwrap();
 
                     // Wait until there is space in the buffer
                     while buffer.len() == buffer_size {
                         println!("Producer {} - waiting on full buffer", id);
-                        buffer = cond_var.wait(buffer).unwrap();
+                        buffer = producer_cond_var.wait(buffer).unwrap();
                     }
 
-                    // Push data to the end of the buffer
+                    // Push data to the end of the buffer & notify a waiting consumer
                     buffer.push(id);
-                    cond_var.notify_one();
+                    consumer_cond_var.notify_one();
                     println!("Producer {} - produced item", id);
                 }
             })
@@ -53,18 +67,22 @@ fn main() -> Result<(), Box<dyn Error>> {
             let buffer = Arc::clone(&buffer);
             thread::spawn(move || {
                 loop {
-                    let (lock, cond_var) = &*buffer;
-                    let mut buffer = lock.lock().unwrap();
+                    let Queue {
+                        queue,
+                        consumer_cond_var,
+                        producer_cond_var,
+                    } = &*buffer;
+                    let mut buffer = queue.lock().unwrap();
 
                     // Wait until there is an item in the buffer
                     while buffer.is_empty() {
                         println!("Consumer {} - waiting on empty buffer", id);
-                        buffer = cond_var.wait(buffer).unwrap();
+                        buffer = consumer_cond_var.wait(buffer).unwrap();
                     }
 
-                    // Consume first item from the buffer
+                    // Consume first item from the buffer & notify a waiting producer
                     let item = buffer.remove(0);
-                    cond_var.notify_one();
+                    producer_cond_var.notify_one();
                     println!("Consumer {} - consumed item {}", id, item);
                 }
             })
