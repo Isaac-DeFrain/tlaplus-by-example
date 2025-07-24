@@ -36,9 +36,9 @@ NotifyOther(t) ==
         THEN waitSet \ Producers
         ELSE waitSet \ Consumers
     IN
-    IF waitSet # {}
-    THEN \E t \in waitSet: waitSet' = waitSet \ {t}
-    ELSE UNCHANGED waitSet
+        IF S # {}
+        THEN \E s \in S: waitSet' = waitSet \ {s}
+        ELSE UNCHANGED waitSet
 
 \* Thread waits to be notified
 Wait(t) ==
@@ -54,7 +54,7 @@ Produce(p) ==
     /\ p \notin waitSet
     /\ \/ /\ Len(buffer) < BufCapacity
           /\ buffer' = Append(buffer, p)
-          /\ Notify
+          /\ NotifyOther(p)
        \/ /\ Len(buffer) = BufCapacity
           /\ Wait(p)
 
@@ -63,9 +63,26 @@ Consume(c) ==
     /\ c \notin waitSet
     /\ \/ /\ buffer # <<>>
           /\ buffer' = Tail(buffer)
-          /\ Notify
+          /\ NotifyOther(c)
        \/ /\ buffer = <<>>
           /\ Wait(c)
+
+-------------------------------------
+
+\* Invariants (Safety properties)
+
+\* TLA+ is untyped
+\* - buffer is a sequence of items/producers
+\* - no more than BufCapacity items
+\* - waitSet is a set of threads
+TypeOK ==
+    /\ buffer \in Seq(Producers)
+    /\ Len(buffer) \in 0..BufCapacity
+    /\ waitSet \in SUBSET (Producers \cup Consumers)
+
+\* Deadlock occurs when there are no active threads
+NoDeadlock == waitSet # (Producers \cup Consumers)
+
 
 -------------------------------------
 
