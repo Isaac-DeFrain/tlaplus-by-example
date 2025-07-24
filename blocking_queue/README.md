@@ -1,4 +1,4 @@
-# TLA+ by Example
+# TLA+ by Example - Blocking Queue
 
 TLA+ is a formal specification language used for designing, modeling, and verifying complex systems. It allows developers to specify the behavior of systems in a mathematical way, which can help in identifying potential issues before implementation.
 
@@ -7,41 +7,9 @@ TLA+ is a formal specification language used for designing, modeling, and verify
 
 Based on this [Linux Foundation talk](https://www.youtube.com/watch?v=H6PjGdd6vGg)
 
-## Install TLA+ Toolbox
+All code available on my [github](https://github.com/Isaac-DeFrain/tlaplus-by-example/tree/main/blocking_queue)
 
-- install `java`
-
-    ```zsh
-    brew install java
-    ```
-
-    symlink it
-
-    ```zsh
-    sudo ln -sfn /opt/homebrew/opt/openjdk/libexec/openjdk.jdk \
-        /Library/Java/JavaVirtualMachines/openjdk.jdk
-    ```
-
-    and check
-
-    ```zsh
-    $ java -version
-    openjdk version "24.0.1" 2025-04-15
-    OpenJDK Runtime Environment Homebrew (build 24.0.1)
-    OpenJDK 64-Bit Server VM Homebrew (build 24.0.1, mixed mode, sharing)
-    ```
-
-- insall TLA+ toolbox
-
-    ```zsh
-    brew install tla+-toolbox
-    ```
-
-- [latest release](https://github.com/tlaplus/tlaplus/releases/latest)
-
-- install [vscode/cursor extension](https://github.com/tlaplus/vscode-tlaplus)
-
-## TLA+ Example (Blocking Queue)
+## Blocking Queue
 
 ### Why?
 
