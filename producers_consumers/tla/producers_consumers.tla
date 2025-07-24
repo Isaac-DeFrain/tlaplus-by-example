@@ -87,11 +87,11 @@ NoDeadlock == waitSet # (Producers \cup Consumers)
 
 \* Liveness properties
 
-\* Eventually, the buffer is not empty or full
+\* It is always true that eventually the buffer is not empty or not full
 Liveness ==
     IF BufCapacity = 1
-    THEN <>(buffer = <<>> \/ Len(buffer) = BufCapacity)
-    ELSE <>(buffer # <<>> \/ Len(buffer) # BufCapacity)
+    THEN []<>(buffer = <<>> \/ Len(buffer) = BufCapacity)
+    ELSE []<>(buffer # <<>> \/ Len(buffer) # BufCapacity)
 
 -------------------------------------
 
