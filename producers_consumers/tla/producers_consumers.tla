@@ -83,6 +83,15 @@ TypeOK ==
 \* Deadlock occurs when there are no active threads
 NoDeadlock == waitSet # (Producers \cup Consumers)
 
+-------------------------------------
+
+\* Liveness properties
+
+\* Eventually, the buffer is not empty or full
+Liveness ==
+    IF BufCapacity = 1
+    THEN <>(buffer = <<>> \/ Len(buffer) = BufCapacity)
+    ELSE <>(buffer # <<>> \/ Len(buffer) # BufCapacity)
 
 -------------------------------------
 
@@ -106,5 +115,9 @@ Next ==
 Spec ==
     /\ Init
     /\ [][Next]_vars
+
+FairSpec ==
+    /\ Spec
+    /\ WF_vars(Next)
 
 =====================================
