@@ -38,3 +38,20 @@ All code available on my [github](https://github.com/Isaac-DeFrain/tlaplus-by-ex
   - consumers notify waiting producers
 
 How can we prove that our program is deadlock free?
+
+## Project Structure
+
+- [rust impl](./rust/)
+- [tla+ spec](./tla/)
+
+### Run the example rust impl
+
+Go to the `rust` directory and do
+
+```zsh
+cargo run -- --producers 2 --consumers 1 --buffer-size 1
+```
+
+### Model check the TLA+ spec
+
+Use the TLA+ extension, open the [spec](./tla/blocking_queue.tla) or [config](./tla/blocking_queue.cfg), and run TLC from the command pallete
