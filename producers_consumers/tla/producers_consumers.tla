@@ -27,8 +27,7 @@ vars == <<buffer, waitSet>>
 
 \* Helpers
 
-\* Notify a waiting thread to wake up, i.e.
-\* producers notify consumers, and vice versa
+\* Notify a waiting thread to wake up
 Notify ==
     IF waitSet # {}
     THEN \E t \in waitSet: waitSet' = waitSet \ {t}
