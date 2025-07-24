@@ -27,8 +27,15 @@ vars == <<buffer, waitSet>>
 
 \* Helpers
 
-\* Notify a waiting thread to wake up
-Notify ==
+\* Notify the other type of waiting thread to wake up, i.e.
+\* - producers notify consumers
+\* - consumers notify producers
+NotifyOther(t) ==
+    LET S ==
+        IF t \in Producers
+        THEN waitSet \ Producers
+        ELSE waitSet \ Consumers
+    IN
     IF waitSet # {}
     THEN \E t \in waitSet: waitSet' = waitSet \ {t}
     ELSE UNCHANGED waitSet
