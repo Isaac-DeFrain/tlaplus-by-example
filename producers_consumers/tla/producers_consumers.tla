@@ -10,10 +10,10 @@ CONSTANTS
 \* Assumptions enforced in the initial state
 
 ASSUME Assumption ==
-       /\ Producers # {}                (* at least one producer *)
-       /\ Consumers # {}                (* at least one consumer *)
-       /\ Producers \cap Consumers = {} (* no thread is both consumer and producer *)
-       /\ BufCapacity \in (Nat \ {0})   (* buffer capacity is at least 1 *)
+    /\ Producers # {}                (* at least one producer *)
+    /\ Consumers # {}                (* at least one consumer *)
+    /\ Producers \cap Consumers = {} (* no thread is both consumer and producer *)
+    /\ BufCapacity \in (Nat \ {0})   (* buffer capacity is at least 1 *)
 
 \* Variables defining the state of the system
 
@@ -75,9 +75,9 @@ Init ==
 \* either:
 \* - an active producer produces
 \* - an active consumer consumes
-Next ==
-    \/ \E p \in Producers \ waitSet: Produce(p)
-    \/ \E c \in Consumers \ waitSet: Consume(c)
+Production == \E p \in Producers \ waitSet: Produce(p)
+Consumption == \E c \in Consumers \ waitSet: Consume(c)
+Next == Production \/ Consumption
 
 Spec ==
     /\ Init
