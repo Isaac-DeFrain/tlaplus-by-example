@@ -5,6 +5,8 @@ TLA+ is a formal specification language used for designing, modeling, and verify
 - Math > Programming: higher level of abstraction makes it easier to reason about systems
 - Easiest to learn through example
 
+Based on this [Linux Foundation talk](https://www.youtube.com/watch?v=H6PjGdd6vGg)
+
 ## Install TLA+ Toolbox
 
 - install `java`

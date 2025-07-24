@@ -1,4 +1,4 @@
------ MODULE producers_consumers -----
+----- MODULE blocking_queue -----
 
 EXTENDS Naturals, Sequences, FiniteSets
 
